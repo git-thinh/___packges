@@ -4,6 +4,7 @@ Tutorial build:
 	> make makefile.in
 
 *MingW: mingw-w64-x86_64-gcc7.2.0-win32-sjlj
+
 *zlib:
 	- https://zlib.net/
 	- unzip source
