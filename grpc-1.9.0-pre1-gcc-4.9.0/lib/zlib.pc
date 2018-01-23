@@ -1,0 +1,13 @@
+prefix=/mnt/c/mw64/bin/grpc/prefix
+exec_prefix=/mnt/c/mw64/bin/grpc/prefix
+libdir=/mnt/c/mw64/bin/grpc/prefix/lib
+sharedlibdir=/mnt/c/mw64/bin/grpc/prefix/lib
+includedir=/mnt/c/mw64/bin/grpc/prefix/include
+
+Name: zlib
+Description: zlib compression library
+Version: 1.2.11
+
+Requires:
+Libs: -L${libdir} -L${sharedlibdir} -lz
+Cflags: -I${includedir}
