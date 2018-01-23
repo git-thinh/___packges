@@ -70,6 +70,14 @@
 		
 				
 	# Build & install GRPC:		
+		> cd && git clone https://github.com/GRPC/GRPC.git 
+		> mingw32-make
+		> mingw32-make install
+	
+		> cmake -G "MinGW Makefiles" -DgRPC_INSTALL=ON -DgRPC_BUILD_TESTS=OFF -DgRPC_PROTOBUF_PROVIDER=package -DgRPC_ZLIB_PROVIDER=package -DgRPC_CARES_PROVIDER=package -DgRPC_SSL_PROVIDER=package -DCMAKE_BUILD_TYPE=Release
+		
+		> cmake -G "MSYS Makefiles" -DCMAKE_INSTALL_PREFIX=C:/mingw-w64-x86_64-7.2.0-win32-sjlj/mingw64 -DCMAKE_BUILD_TYPE=DEBUG
+		
 		$ sudo apt-get install autoconf automake libtool curl make g++ unzip
 		$ sudo apt-get install git cmake golang-go perl
 		$ sudo apt-get install zlib
