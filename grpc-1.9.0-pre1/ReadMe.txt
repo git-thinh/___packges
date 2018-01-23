@@ -11,16 +11,24 @@ Tutorial build:
 	> cd grpc
 	> @rem To update submodules at later time, run "git submodule update --init"
 	
-	> cd && git clone https://github.com/grpc/grpc.git
-	> mkdir _build
-	> cd _build
+	> git clone https://github.com/grpc/grpc.git && cd grpc
 	
 	> git submodule init
 	> git submodule update
 	
+	> mkdir _build
+	> cd _build
+	
 	> cmake .. -G "MinGW Makefiles"
+	
+	$ mkdir _build && cd _build
+	$ CROSS_COMPILE="x86_64-w64-mingw32-" ./_build mingw64 no-asm shared --prefix=/usr/mw64
+	$ PATH=$PATH:/usr/mw64/bin make
+	$ PATH=$PATH:/usr/mw64/bin make install
 	
 	> cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
 	> cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
 	
 	> mingw32-make install
+	
+	mingw-w64-x86_64-grpc-1.7.2-1
