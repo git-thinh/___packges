@@ -1,0 +1,167 @@
+FlatBuffers release 1.8.0
+@aardappel aardappel released this on 21 Nov 2017 · 38 commits to master since this release
+
+https://github.com/google/flatbuffers/
+http://google.github.io/flatbuffers/flatbuffers_guide_building.html
+
+#  FIX error: _WIN32_WINNT 0x0600; mingw32-make error: mutex in namespace std does not name a type; error: condition_variable in namespace  
+#  Mutex, at least, is not supported in Thread model: win32 of the Mingw-builds toolchains. You could find in x86_64-4.9.2-posix-seh or newer
+#  -----------------------------------------------------------------------------------------------------------------------------------------
+#  Debug: -g2 -Wall Release: -O2 -Wno-error ///  -Wformat -Wformat-security
+SET(CMAKE_MY_FLAGS 		${CMAKE_MY_FLAGS}	"-g2 -Wall -D_WIN32_WINNT=0x600 -pthread -static-libgcc -fexceptions -mtune=generic -pipe -fPIC -fomit-frame-pointer -fstack-protector-strong --param ssp-buffer-size=4 -D_FORTIFY_SOURCE=2") 
+SET(CMAKE_C_FLAGS   	${CMAKE_MY_FLAGS}) 
+SET(CMAKE_CXX_FLAGS   	${CMAKE_MY_FLAGS}	"-std=c++11 -static-libstdc++")
+# for the gcc -fstack-protector* flags we need libssp
+# clang does not have this
+IF(CMAKE_COMPILER_IS_GNUCXX)
+	SET(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -lssp")
+	SET(CMAKE_C_LINK_EXECUTABLE   "${CMAKE_C_LINK_EXECUTABLE}   -lssp")
+ENDIF()
+#  -----------------------------------------------------------------------------------------------------------------------------------------
+
+
+Building with CMake
+The distribution comes with a cmake file that should allow you to build project/make files for any platform. For details on cmake, see http://www.cmake.org. In brief, depending on your platform, use one of e.g.:
+cmake -G "MinGW Makefiles"
+cmake -G "Visual Studio 10"
+cmake -G "Xcode"
+-----------------------------------------------------------------------------
+# Compiling the Monsters' Schema:
+	cd bin
+	flatc --cpp monster.fbs
+	flatc --grpc --cpp greeter.fbs
+	
+-> general file: monster_generated.h, greeter.grpc.fb.cc, greeter.grpc.fb.h
+
+# BUILD: 
+	git clone https://github.com/google/flatbuffers.git
+	cd flatbuffers
+	cmake -G "MinGW Makefiles"   
+	mingw32-make
+	
+	zlib:
+		> cmake -G "MinGW Makefiles" -DBUILD_STATIC=OFF -DCMAKE_BUILD_TYPE=Release -DIOAPI_NO_64=ON 
+		> mingw32-make && mingw32-make install
+	zlib:
+		> cmake -DCMAKE_TOOLCHAIN_FILE=util/32-bit-toolchain.cmake -G "MinGW Makefiles"
+			cmake -G "MinGW Makefiles" -DCMAKE_CXX_FLAGS="-Werror=attributes"
+		> mingw32-make && mingw32-make install
+	
+	cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON
+	
+	cmake -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=C:/OpenSSL-CMake/build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON
+	
+	./Configure 
+	
+# BUILD THIRD_PARTY: 
+
+	cd third_party 
+	git clone  zlib
+	git clone  protobuf
+	git clone  ssl
+	git clone  gflags 
+	
+	cd third_party 
+	cd cares 
+	git clone  cares 
+	
+# BUILD boringssl: 	
+
+	cd third_party
+	cd boringssl
+	cmake -DCMAKE_TOOLCHAIN_FILE=util/32-bit-toolchain.cmake -G "MinGW Makefiles"
+	
+# FIX error: _WIN32_WINNT 0x0600; error: mutex in namespace std does not name a type; error: condition_variable in namespace
+	C:\mingw-w64-x86_64-7.2.0-win32-sjlj\mingw64\bin\g++.exe 
+	C:\mingw-w64-x86_64-7.2.0-win32-sjlj\mingw64\bin\g++.exe -D_WIN32_WINNT=0x0601 -m32 -pthread -std=c++11 -static-libgcc
+	C:\mingw-w64-x86_64-7.2.0-win32-sjlj\mingw64\bin\g++.exe -D_WIN32_WINNT=0x0601 -m32 -pthread -std=c++11 -static-libgcc
+	
+# TEST: build.bat:
+
+	g++ sample_text.cpp -o text.exe -I"H:\flatbuffers-gcc72-mingw32\include" -L"H:\flatbuffers-gcc72-mingw32\lib" -lflatbuffers -static-libgcc -std=c++11
+	g++ sample_binary.cpp -o binary.exe -I"H:\flatbuffers-gcc72-mingw32\include" -L"H:\flatbuffers-gcc72-mingw32\lib" -lflatbuffers -static-libgcc -std=c++11
+	call binary.exe
+	call text.exe
+	
+-----------------------------------------------------------------------------
+If you want to do it manually, you can compile all your .cpp files into object files: g++ -c *.cpp
+and link all the object files: g++ *.o -o a.out
+If ClassA.cpp is changed, you can just recompile ClassA.cpp: g++ -c ClassA.cpp
+and link them all again: g++ *.o -o a.out
+
+For the #include, you are correct. Make sure you have include guards so that their contents are included only once.
+
+#ifndef CLASS_A_H
+#define CLASS_A_H
+
+class classA
+{
+
+};
+
+#endif
+you can specify -o to g++ to name your output file something else than 'a.exe'
+
+Usually with gcc/g++ and other command line compilers, the strategy is to first compile the source files, then link them with another command. This helps prevent the files not modified from being recompiled every time. This uses the -c switch of gcc
+
+Try this
+
+g++ -c ClassA.cpp -o ClassA.o
+g++ -c ClassB.cpp -o ClassB.o
+g++ -c main.cpp -o main.o
+
+g++ ClassA.o ClassB.o main.o -o myProgram.exe
+-----------------------------------------------------------------------------
+
+Please learn about automake and autoconf.
+Makefile.am is processed by automake to generate a Makefile that is processed by make in order to build your sources.
+http://www.gnu.org/software/automake/
+
+mingw32-make.exe makefile.in
+make.exe makefile.in
+-----------------------------------------------------------------------------
+@echo off
+CLS
+
+::rm.exe -f main.o mutex-2.exe
+::g++.exe -c main.cpp -o main.o -I"C:/Program Files (x86)/Dev-Cpp/MinGW64.GCC5.1.0/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64.GCC5.1.0/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64.GCC5.1.0/lib/gcc/x86_64-w64-mingw32/5.1.0/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64.GCC5.1.0/lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++" -m32 -std=gnu++11
+::g++.exe main.o -o mutex-2.exe -L"C:/Program Files (x86)/Dev-Cpp/MinGW64.GCC5.1.0/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64.GCC5.1.0/x86_64-w64-mingw32/lib" -static-libgcc -lmingw32 -m32
+
+::g++ -I"C:/C++/protobuf.3.5.1-gcc.4.9.2/include" -L"C:/C++/protobuf.3.5.1-gcc.4.9.2/lib" main.cpp addressbook.pb.cc -lprotobuf -pthread
+
+del /s /q /f *.o
+del /s /q /f *.a
+del /s /q /f *.dll
+del /s /q /f *.exe
+ECHO.
+ECHO.
+
+SET "CPP=g++.exe"
+
+SET "GCC_LIB_PATH_1=C:/Program Files (x86)/Dev-Cpp/MinGW64.GCC5.1.0/lib"
+SET "GCC_LIB_PATH_2=C:/Program Files (x86)/Dev-Cpp/MinGW64.GCC5.1.0/x86_64-w64-mingw32/lib"
+
+SET "GCC_INCLUDE_PATH_1=C:/Program Files (x86)/Dev-Cpp/MinGW64.GCC5.1.0/include"
+SET "GCC_INCLUDE_PATH_2=C:/Program Files (x86)/Dev-Cpp/MinGW64.GCC5.1.0/x86_64-w64-mingw32/include"
+SET "GCC_INCLUDE_PATH_3=C:/Program Files (x86)/Dev-Cpp/MinGW64.GCC5.1.0/lib/gcc/x86_64-w64-mingw32/5.1.0/include"
+SET "GCC_INCLUDE_PATH_4=C:/Program Files (x86)/Dev-Cpp/MinGW64.GCC5.1.0/lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++"
+
+SET "LIBS=-L"%GCC_LIB_PATH_1%" -L"%GCC_LIB_PATH_2%" -static-libgcc -m64"
+SET "INCS=-I"%GCC_INCLUDE_PATH_1%" -I"%GCC_INCLUDE_PATH_2%" -I"%GCC_INCLUDE_PATH_3%""
+SET "CXXINCS=-I"%GCC_INCLUDE_PATH_1%" -I"%GCC_INCLUDE_PATH_2%" -I"%GCC_INCLUDE_PATH_3%" -I"%GCC_INCLUDE_PATH_4%""
+
+ECHO LIBS = %LIBS%
+ECHO INCS = %INCS%
+ECHO CXXINCS = %CXXINCS%
+
+ECHO.
+ECHO.
+
+%CPP% -c main.cpp -o main.o -m32 -std=gnu++11 -D DF=123
+::%CPP% main.o -o app.exe -m32 -static-libgcc -pthread -shared-libstdc++
+%CPP% main.o -o app.exe -m32 -static-libgcc -pthread
+
+::%CPP% -c addressbook.pb.cc -o addressbook.pb.o -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/C++/protobuf.3.5.1-gcc.4.9.2/include" -m32 -std=gnu++11
+::%CPP% main.o addressbook.pb.o -o main.exe -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib32" -static-libgcc -L"C:/C++/protobuf.3.5.1-gcc.4.9.2/lib" -L"lib/libprotoc.a" -L"lib/libprotobuf.a" -m32
+
+::%CPP% main.o -pthread
