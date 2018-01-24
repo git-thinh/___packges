@@ -45,6 +45,10 @@
 		
 		
 		
+		
+		
+		
+		
 		$ ./autogen.sh
 		
 		$ mkdir configure && cd configure
@@ -353,6 +357,30 @@ Install it.
 
 	$ sudo PATH=$PATH:/opt/mingw64/bin make install
 	
+	CROSS_COMPILE="" ./Configure mingw64 no-asm shared --prefix=/c/mingw-w64-x86_64-gcc7.2.0-win32-sjlj/mingw64
+	CROSS_COMPILE="" ./Configure mingw64 no-shared no-asm --prefix=/c/mingw-w64-x86_64-gcc7.2.0-win32-sjlj/mingw64
+	
+	CROSS_COMPILE=/c/mingw-w64-x86_64-gcc7.2.0-win32-sjlj/mingw64/bin/ ./Configure mingw64 no-shared no-asm --prefix=/c/OpenSSL-x64
+	PATH=$PATH:/c/mingw-w64-x86_64-gcc7.2.0-win32-sjlj/mingw64/bin make depend
+	PATH=$PATH:/c/mingw-w64-x86_64-gcc7.2.0-win32-sjlj/mingw64/bin make >> /c/log.txt 2>&1
+	PATH=$PATH:/c/mingw-w64-x86_64-gcc7.2.0-win32-sjlj/mingw64/bin make install
+
+	PATH=$PATH:/c/mingw-w64-x86_64-gcc7.2.0-win32-sjlj/mingw64/bin make
+	PATH=$PATH:/c/mingw-w64-x86_64-gcc7.2.0-win32-sjlj/mingw64/bin make install
+	
+	$ git submodule update --init
+		
+	$ mkdir build-64 && cd build-64
+	$ CROSS_COMPILE="x86_64-w64-mingw32-" ./build-64 mingw64 no-asm shared --prefix=/mnt/c/mingw-w64-x86_64-gcc7.2.0-win32-sjlj/mingw64		
+	
+	$ CROSS_COMPILE="/mnt/c/mingw-w64-x86_64-gcc7.2.0-win32-sjlj/mingw64/bin/" ./build-64 mingw64 no-asm shared --prefix=/mnt/c/mingw-w64-x86_64-gcc7.2.0-win32-sjlj/mingw64		
+	$ cmake -DTARGET_ARCH=mingw64 -DCMAKE_INSTALL_PREFIX=/C/OpenSSL-x64      
+	$ PATH=/mnt/c/mingw-w64-x86_64-gcc7.2.0-win32-sjlj/mingw64/bin:$PATH gcc -v
+	$ PATH=$PATH:/mnt/c/mingw-w64-x86_64-gcc7.2.0-win32-sjlj/mingw64/bin make
+	$ PATH=$PATH:/mnt/c/mingw-w64-x86_64-gcc7.2.0-win32-sjlj/mingw64/bin make install
+		
+		
+		
 We now have the OpenSSL libraries and headers for 64-bit Windows installed. Repeat the steps above with CROSS_COMPILE="i686-w64-mingw32-" and prefix /opt/mingw32 to build and install the 32-bit libraries for Windows.
  
 
