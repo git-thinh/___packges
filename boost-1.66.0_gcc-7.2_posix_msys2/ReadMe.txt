@@ -56,6 +56,12 @@
 	$ MINGW_INSTALLS=mingw64 makepkg-mingw -sLf
 	$ pacman -U mingw-w64-x86_64-boost-1.66.0-1-any.pkg.tar.xz
 	
+	
+	
+	
+	$ export BOOST_ROOT=/c/boost_1_58_0
+	$ export BOOST_LIBRARYDIR=/c/boost_1_58_0/lib64-msvc-14.0
+	
 	$ PATH=$PATH:/c/msys2/mingw64/bin
 	$ cd bond
 	$ cd build # or wherever you ran CMake before
