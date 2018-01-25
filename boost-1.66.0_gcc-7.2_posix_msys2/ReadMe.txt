@@ -1,12 +1,19 @@
 
+	$ pacman -Syu
+	$ pacman -Su
+	
 	$ pacman -S mingw-w64-x86_64-qt5
 	
 	$ PATH=$PATH:/c/msys2/mingw64/bin	
 	
+	
+	$ pacman -S make
+	
+	
 	$ pacman -S mingw-w64-x86_64-go
 	$ pacman -S mingw-w64-x86_64-opencv
 	$ pacman -S mingw-w64-x86_64-boost
-	$ pacman -Sy mingw-w64-i686-toolchain
+	$ pacman -Sy mingw-w64-x86_64-toolchain mingw-w64-i686-toolchain
 	$ pacman -Sy mingw-w64-x86_64-zlib
 	$ pacman -Sy mingw-w64-x86_64-grpc
 	
@@ -49,7 +56,12 @@
 	$ MINGW_INSTALLS=mingw64 makepkg-mingw -sLf
 	$ pacman -U mingw-w64-x86_64-boost-1.66.0-1-any.pkg.tar.xz
 	
-	
-	
+	$ PATH=$PATH:/c/msys2/mingw64/bin
+	$ cd bond
+	$ cd build # or wherever you ran CMake before
+	$ cmake -DBOND_ENABLE_GRPC=TRUE -DgRPC_ZLIB_PROVIDER=package ..
+	$ make --jobs 8 check
+	$ make install # To install the other libraries just built
+	$ make && make install
 	
 	
