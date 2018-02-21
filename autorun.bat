@@ -14,14 +14,17 @@
 #	7. Click on “OK” then on “OK” on the create task panel and it will now be scheduled.
 #	8. Add the .bat script to the place specified in your task event.
 
+# 	RunHiddenConsole.exe "C:\php\php-cgi.exe" -b 127.0.0.1:9000 -c "C:\php\php.ini"
 
 @ECHO OFF
 
 cd C:\nginx
 
 nginx -s stop
+taskkill /F /IM nginx.exe
 start nginx
 
-taskkill /IM sshd.exe /F
+taskkill /F /IM sshd.exe
+
 start C:\msys2\App\msys32\usr\bin\sshd.exe
 
