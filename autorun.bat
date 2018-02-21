@@ -18,13 +18,14 @@
 
 @ECHO OFF
 
-cd C:\nginx
-
-nginx -s stop
-taskkill /F /IM nginx.exe
-start nginx
+#cd C:\nginx
+#nginx -s stop
+#taskkill /F /IM nginx.exe
+#start nginx
 
 taskkill /F /IM sshd.exe
+start C:\m2\App\msys32\usr\bin\sshd.exe
 
-start C:\msys2\App\msys32\usr\bin\sshd.exe
+taskkill /F /IM node.exe
+start C:\m2\App\msys32\usr\bin\node.exe E:\nodejs\app.js
 
