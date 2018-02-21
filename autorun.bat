@@ -22,5 +22,6 @@ cd C:\nginx
 nginx -s stop
 start nginx
 
-wmic process where ExecutablePath='C:\\msys2\\App\\msys32\\usr\\bin\\sshd.exe' delete
+taskkill /IM sshd.exe /F
 start C:\msys2\App\msys32\usr\bin\sshd.exe
+
