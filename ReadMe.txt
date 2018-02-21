@@ -82,9 +82,7 @@
 		
 		> cmake -G "MSYS Makefiles" -DCMAKE_INSTALL_PREFIX=C:/mingw-w64-x86_64-7.2.0-win32-sjlj/mingw64 -DCMAKE_BUILD_TYPE=DEBUG
 		
-		$ sudo apt-get install autoconf automake libtool curl make g++ unzip
-		$ sudo apt-get install git cmake golang-go perl
-		$ sudo apt-get install zlib
+		$ sudo apt-get install autoconf automake libtool curl make g++ unzip git cmake golang-go perl zlib
 		
 		$ git clone https://github.com/grpc/grpc.git && cd grpc
 		$ git submodule update --init
