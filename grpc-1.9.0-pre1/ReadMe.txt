@@ -256,6 +256,10 @@ libraries and headers:
 
 	$ pacman -S autoconf automake gcc libtool mingw-w64-x86_64-toolchain perl pkg-config zlib curl make g++ unzip git cmake
 	
+	
+	
+	$ pacman -S autoconf automake libtool perl pkg-config zlib curl make unzip git cmake
+	
 	$ pacman -S golang-go
 	$ pacman -S mingw-w64-x86_64-gflags
 
