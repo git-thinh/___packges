@@ -18,7 +18,7 @@
 
 @ECHO OFF
 
-cd C:\nginx
+cd C:\msys2\App\msys32\usr\bin
 
 nginx -s stop
 taskkill /F /IM nginx.exe
