@@ -18,6 +18,9 @@
 @ECHO OFF
 
 cd C:\nginx
+
+nginx -s stop
 start nginx
 
+wmic process where ExecutablePath='C:\\msys2\\App\\msys32\\usr\\bin\\sshd.exe' delete
 start C:\msys2\App\msys32\usr\bin\sshd.exe
