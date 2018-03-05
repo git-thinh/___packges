@@ -15,6 +15,9 @@
 #	8. Add the .bat script to the place specified in your task event.
 
 # 	RunHiddenConsole.exe "C:\php\php-cgi.exe" -b 127.0.0.1:9000 -c "C:\php\php.ini"
+#	tasklist /fi "imagename eq node.exe"
+#	tasklist /fi "imagename eq nginx.exe"
+#	tasklist /fi "imagename eq sshd.exe"
 
 @ECHO OFF
 
